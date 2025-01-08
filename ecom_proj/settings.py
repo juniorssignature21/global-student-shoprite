@@ -56,7 +56,7 @@ INSTALLED_APPS = [
 
     'django_ckeditor_5',
     'anymail',
-    'captcha',
+    # 'captcha',
     'django_extensions'
 
 ]

@@ -5,4 +5,6 @@ app_name = 'store'
 
 urlpatterns = [
     path("", views.index, name="index"),
+    path("detail/<str:slug>/", views.product_detail, name="product-detail"),
+    path("add_to_cart/", views.add_to_cart, name="add_to_cart")
 ]
