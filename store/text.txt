@@ -1,0 +1,26 @@
+{% if not prod.average_rating %}
+{% elif  prod.average_rating > 0 and p.average_rating < 2%}
+<small class="fa fa-star text-primary mr-1"></small>
+{% elif  prod.average_rating > 1 and p.average_rating < 3%}
+<small class="fa fa-star text-primary mr-1"></small>
+<small class="fa fa-star text-primary mr-1"></small>
+{% elif  prod.average_rating > 2 and p.average_rating < 4%}
+<small class="fa fa-star text-primary mr-1"></small>
+<small class="fa fa-star text-primary mr-1"></small>
+<small class="fa fa-star text-primary mr-1"></small>
+{% elif  prod.average_rating > 3 and p.average_rating < 5%}
+<small class="fa fa-star text-primary mr-1"></small>
+<small class="fa fa-star text-primary mr-1"></small>
+<small class="fa fa-star text-primary mr-1"></small>
+<small class="fa fa-star text-primary mr-1"></small>
+{% elif  prod.average_rating > 4%}
+<small class="fa fa-star text-primary mr-1"></small>
+<small class="fa fa-star text-primary mr-1"></small>
+<small class="fa fa-star text-primary mr-1"></small>
+<small class="fa fa-star text-primary mr-1"></small>
+<small class="fa fa-star text-primary mr-1"></small>
+
+
+
+
+{% endif %}
