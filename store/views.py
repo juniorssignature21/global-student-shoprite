@@ -1,6 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from store import models as store_models
+from customer import models as customer_models
 from django.contrib import messages
 from django.db.models import Q, Avg, Sum
 from decimal import Decimal
@@ -9,12 +10,14 @@ from decimal import Decimal
 
 def index(request):
     products = store_models.Product.objects.filter(status="Published")
+    
     context = {
         "products":products,
     }
     return render(request, "store/index.html", context)
 
 def product_detail(request, slug):
+    
     products = store_models.Product.objects.get(status="Published", slug=slug)
     related_product = store_models.Product.objects.filter(category=products.category, status="Published").exclude(id=products.id)
     
@@ -53,6 +56,7 @@ def add_to_cart(request):
         cart = store_models.Cart()
         cart.product = products    
         cart.price = products.price    
+        cart.qty = qty
         cart.color = color     
         cart.size=  size
         cart.sub_total = Decimal(products.price) * Decimal(qty)
@@ -67,6 +71,7 @@ def add_to_cart(request):
     else:
         existing_cart_items.product = products    
         existing_cart_items.price = products.price    
+        existing_cart_items.qty = qty
         existing_cart_items.color = color     
         existing_cart_items.size=  size
         existing_cart_items.sub_total = Decimal(products.price) * Decimal(qty)
@@ -79,14 +84,91 @@ def add_to_cart(request):
         message = "Cart updated"
     
     total_cart_items = store_models.Cart.objects.filter(Q(cart_id=cart_id) | Q(cart_id=cart_id))
-    cart_sub_total = store_models.Cart.objects.filter(Q(cart_id=cart_id) | Q(cart_id=cart_id)).aaggregate(sub_total=Sum("sub_toal"))["sub_total"]
+    cart_sub_total = store_models.Cart.objects.filter(Q(cart_id=cart_id) | Q(cart_id=cart_id)).aggregate(sub_total=Sum("sub_total"))["sub_total"]
     return JsonResponse(
         {
             "message": message,
             "total_cart_items":total_cart_items.count(),
             "cart_sub_total": "{:,.2f}".format(cart_sub_total),
-            "items_sub_total": "{:,.2f}".format(existing_cart_items.sub_total) if existing_cart_items else "{:,.2f}".format(cart.cart_sub_total)
+            "item_sub_total": "{:,.2f}".format(existing_cart_items.sub_total) if existing_cart_items else "{:,.2f}".format(cart.sub_total)
         })        
             
+def cart(request):
+    if "cart_id" in request.session:
+        cart_id =request.session['cart_id']
+    else:
+        cart_id = None
+        
+    items = store_models.Cart.objects.filter(Q(cart_id=cart_id) | Q(user=request.user) if request.user.is_authenticated else  Q(cart_id=cart_id))
+    cart_sub_total = store_models.Cart.objects.filter(Q(cart_id=cart_id) | Q(user=request.user) if request.user.is_authenticated else  Q(cart_id=cart_id)).aggregate(sub_total = Sum("sub_total"))["sub_total"]
     
+    try:
+        addresses = customer_models.Address.objects.filter(user=request.user)
+    except:
+        addresses = None
+        
+    if not items:
+        messages.warning(request, "no items in cart")
+        return redirect("store:index")
+    
+    context = {
+     "items":items,
+     "addresses":addresses,   
+     "cart_sub_total":cart_sub_total,   
+    }
+    return render(request, "store/cart.html", context)
+
+def delete_cart_item(request):
+    id = request.GET.get("id")
+    item_id = request.GET.get("item_id")
+    cart_id = request.GET.get("cart_id")
+    
+    if not id and not item_id and not cart_id:
+        return JsonResponse({"error": "Item or product not found"}, status=400)
+    
+    try:
+        product  = store_models.Product.objects.get(status="Published", id=id)
+    except store_models.Product.DoesNotExist:
+        return JsonResponse({"error": "Product not found"}, status=404)
+    
+    item = store_models.Cart.objects.get(product=product, id=item_id)
+    item.delete()
+    
+    total_cart_items = store_models.Cart.objects.filter(Q(cart_id=cart_id) | Q(user=request.user))
+    cart_sub_total = store_models.Cart.objects.filter(Q(cart_id=cart_id) | Q(user=request.user)).aggregate(sub_total = Sum("sub_total"))["sub_total"]
+    
+    return JsonResponse({
+        "message": "Item deleted",
+        "total_cart_items":total_cart_items.count(),
+        "cart_sub_total":"{:,.2f}".format(cart_sub_total) if cart_sub_total else 0.00
+    })
+    
+    
+    
+# def create_order(request):
+#     if request.method == "POST":
+#         address_id = request.POST.get("address")
+        
+#         if not address_id:
+#             messages.warning(request, "Please select an address to continue")
+#             return redirect("store:cart")
+        
+#         address_id = customer_models.Address.objects.filter(user=request.user, id=address_id).first()
+        
+#         if "cart_id" in request.session:
+#             cart_id = request.session["cart_id"]
+#         else:
+#             cart_id = None
+        
+#         items = store_models.Cart.objects.filter(Q(cart_id=cart_id) | Q(user=request.user) if request.user.is_authenticated else  Q(cart_id=cart_id))
+        
+#         cart_sub_total = store_models.Cart.objects.filter(Q(cart_id=cart_id) | Q(user=request.user) if request.user.is_authenticated else  Q(cart_id=cart_id)).aggregate(sub_total=Sum("sub_total"))["sub_total"]
+        
+#         cart_shipping_total = store_models.Cart.objects.filter(Q(cart_id=cart_id) | Q(user=request.user) if request.user.is_authenticated else  Q(cart_id=cart_id)).aggregate(shipping=Sum("shipping"))["shipping"]
+        
+#         order  = store_models.Order()
+        
+#         order.sub_total = cart_sub_total
+#         order.customer = request.user
+#         order.address = address_id
     

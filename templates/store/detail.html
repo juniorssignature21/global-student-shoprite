@@ -145,29 +145,23 @@
 
                     <!--start cart item increment and decrement button-->
                     <div class="d-flex align-items-center mb-4 pt-2">
-                                <select
-                                    class="form-select form-select-lg quantity"
-                                    id="quantity"
-                                    name="quantity"
-                                >
-                                {% for qty in product_stock_range %}
-                                <option value="{{qty}}" class="stock-{{qty}} quantity">
-                                    {{qty}}
-                                </option>
-                                {% endfor %}
-                                    
-                                </select>
-                            {% comment %} </div> {% endcomment %}
+                        <select name="quantity" id="quantity">
+                            {% for qty in  product_stock_range%}
+                            <option class="stock-{{qty}} quantity"  value="{{qty}}">
+                                {{qty}}
+                            </option>
+                            {% endfor %}
+                        </select>
                         </div>
-
                             
                     <!--end cart item increment and decrement button-->
 
 
 
-                        <button class="btn btn-primary px-3 add_to_cart" data-id="{{products.id}}"><i class="fa fa-shopping-cart mr-1"></i> Add To Cart</button>
-                    </div>
-                    <div class="d-flex pt-2">
+                <button class="btn btn-primary px-3 add_to_cart" data-id="{{products.id}}"><i class="fa fa-shopping-cart mr-1"></i> Add To Cart</button>
+            </div>
+
+                <div class="d-flex pt-2">
                         <strong class="text-dark mr-2">Share on:</strong>
                         <div class="d-inline-flex">
                             <a class="text-dark px-2" href="">
