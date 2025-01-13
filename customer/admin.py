@@ -6,7 +6,7 @@ from customer import models as customer_models
 # Register your models here.
 
 class AddressAdmin(ImportExportModelAdmin):
-    list_display = ["user", "full_name"]
+    list_display = ["user", "first_name", "last_name"]
     
 class WishlistAdmin(ImportExportModelAdmin):
     list_display = ["user", "product"]

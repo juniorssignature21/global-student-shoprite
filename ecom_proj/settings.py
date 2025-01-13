@@ -16,6 +16,7 @@ from environs import Env
 import os
 from django.contrib import messages
 
+
 env = Env()  
 env.read_env()  
 

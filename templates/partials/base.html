@@ -181,17 +181,27 @@
         </div>
     </div>
     <!-- Navbar End -->
-     {% for message in messages %}
+    {% for message in messages %}
         {% if message %}
+        <div
+            class="alert alert-primary alert-dismissible fade show"
+            role="alert"
+        >
+            <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="alert"
+                aria-label="Close"
+            ></button>
         
-        <div class="alert alert-{{message.tag}}">
             <strong>
                 {{message}}
             </strong>
         </div>
         
+        
         {% endif %}
-     {% endfor %}
+    {% endfor %}
 
 {% block content %}
 

@@ -117,9 +117,9 @@ $(document).ready(function() {
                 $(".item_sub_total_" + item_id).text(response.item_sub_total);
                 $(".cart_sub_total").text(response.cart_sub_total);
                 if (update_type === "increase") {
-                    button_el.html("+");
+                    button_el.html("<i class='fa fa-plus'></i>");
                 } else {
-                    button_el.html("-");
+                    button_el.html("<i class='fa fa-minus'></i>");
                 }
             },
             error: function(xhr, status, error) {
@@ -133,9 +133,9 @@ $(document).ready(function() {
                 // Reset quantity input and button text on error
                 $(".item-qty-" + item_id).val(stock); // Set input value to stock limit
                 if (update_type === "increase") {
-                    button_el.html("+");
+                    button_el.html("<i class='fa fa-plus'></i>");
                 } else {
-                    button_el.html("-");
+                    button_el.html("<i class='fa fa-minus'></i>");
                 }
             }
         });
