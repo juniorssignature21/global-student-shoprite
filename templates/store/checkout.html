@@ -223,7 +223,7 @@
                         </div>
                     </div>
                 </div>
-                <form action="{% url "store:coupon_apply" order.order_id  %}" method="POST">
+                {% comment %} <form action="{% url "store:coupon_apply" order.order_id  %}" method="POST">
                     {% csrf_token %}
                 <div class="input-group mb-5">
                         <input type="text" class="form-control border-0 p-4"
@@ -233,7 +233,7 @@
                             <button type="submit" class="btn btn-primary">Apply Coupon</button>
                         </div>
                     </div>
-                </form>
+                </form> {% endcomment %}
 
                 
                 <div class="mb-5">
