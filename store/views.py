@@ -258,3 +258,4 @@ def coupon_apply(request, order_id):
         
         return redirect("store:checkout", order.order_id)
 
+
