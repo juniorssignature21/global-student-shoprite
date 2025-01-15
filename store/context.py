@@ -7,5 +7,5 @@ def default(request):
     except:
         total_cart_items = 0
     return{
-        "total_cart_items":total_cart_items.count()
+        "total_cart_items":len(total_cart_items)
     }
