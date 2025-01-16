@@ -73,7 +73,7 @@ $(document).ready(function() {
         const button_el = $(this);
         const update_type = button_el.attr('data-update-type');
         const item_id = button_el.attr('data-item-id');
-        let qty = parseInt($(".item-qty-" + item_id).val());
+        let qty = $(".item-qty-" + item_id).val();
         const product_id = button_el.attr('data-product-id');
         const cart_id = generateCartId();
         const stock = parseInt($(".item-qty-" + item_id).attr('data-qty')); // Get stock from data attribute

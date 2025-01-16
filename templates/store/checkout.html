@@ -239,10 +239,12 @@
                 <div class="mb-5">
                     <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Payment</span></h5>
                     <div class="bg-light p-30">
+                        <div id="paypal-button-container"></div>
+                        
                         <div class="form-group">
                             <div class="custom-control custom-radio">
-                                <input type="radio" class="custom-control-input" name="payment" id="paypal">
-                                <label class="custom-control-label" for="paypal">Paypal</label>
+                                <input type="radio" class="custom-control-input" name="payment" id="paypal-button-container">
+                                <label class="custom-control-label" for="paypal-button-container">Paypal</label>
                             </div>
                         </div>
                         <div class="form-group">
@@ -264,4 +266,43 @@
         </div>
     </div>
     <!-- Checkout End -->
+<script src="https://www.paypal.com/sdk/js?client-id={{paypal_client_id}}&currency=USD"></script>
+
+<script>
+    function initPayPalButton() {
+        paypal.Buttons({
+            style: {
+                shape: "rect",
+                color: "gold",
+                layout: "vertical",
+                label: "paypal",
+            },
+            createOrder: function (data, actions) {
+                return actions.order.create({
+                    purchase_units: [{
+                        amount: {
+                            currency_code: "USD",
+                            value: "{{order.total}}", // Replace with dynamic order total
+                        },
+                    }],
+                });
+            },
+            onApprove: function (data, actions) {
+                return actions.order.capture().then(function(orderData) {
+                    // Show a success message within this page
+                    const element = document.getElementById("paypal-button-container");
+                    element.innerHTML = "<h5>Verifying payment...</h5>";
+                    window.location.href = `/paypal_payment_verify/{{order.order_id}}/?transaction_id=${orderData.id}`;
+                });
+            },
+            onError: function (err) {
+                console.log(err);
+            }
+        }).render("#paypal-button-container");
+    }
+    document.addEventListener("DOMContentLoaded", function () {
+        initPayPalButton();
+    });
+</script>
+
 {% endblock content %}

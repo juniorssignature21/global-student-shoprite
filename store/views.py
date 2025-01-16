@@ -7,10 +7,16 @@ from django.contrib import messages
 from django.db.models import Q, Avg, Sum
 from decimal import Decimal
 from plugin.tax_calculator import tax_calculation
+from django.conf import settings
+from django.views.decorators.csrf import csrf_exempt
 
+
+import requests
+import stripe
 # Create your views here.
 
 def index(request):
+    
     products = store_models.Product.objects.filter(status="Published")
     
     context = {
@@ -204,6 +210,7 @@ def checkout(request, order_id):
     order = store_models.Order.objects.get(order_id=order_id)
     context = {
         "order":order,
+        "paypal_client_id": settings.PAYPAL_CLIENT_ID
     }
     return render(request, "store/checkout.html", context)
         
@@ -258,4 +265,116 @@ def coupon_apply(request, order_id):
         
         return redirect("store:checkout", order.order_id)
 
+def clear_cart_items(request):
+    try:
+        cart_id = request.session["cart_id"]
+        store_models.Cart.objects.filter(cart_id=cart_id).delete()
+    except:
+        pass
+    
+    return
 
+def get_paypal_access_token():
+    token_url = "https://api.sandbox.paypal.com/v1/oauth2/token"
+    data = {"grant_type": "client_credentials"}
+    auth = (settings.PAYPAL_CLIENT_ID, settings.PAYPAL_SECRET_ID)
+    
+    response = requests.post(token_url, data=data, auth=auth)
+    
+    if response.status_code == 200:
+        return response.json()["access_token"]
+    else:
+        raise Exception(f"failed to access token from Paypal. Staus code: {response.status_code}")
+    
+# def paypal_payment_verify(request, order_id):
+#     order = store_models.Order.objects.get(order_id=order_id)
+    
+#     transaction_id = request.GET.get("transaction_id")
+#     paypal_api_url = f"https://api-m.sandbox.paypal.com/v2/checkout/orders/{transaction_id}"
+    
+#     headers ={
+#         "Content-Type": "application/json",
+#         "Authorization": f"Bearer {get_paypal_access_token}"
+#     }
+#     # response  = requests.get(paypal_api_url,headers=headers)
+#     response = requests.get(paypal_api_url, headers=headers)  # Increase timeout to 30 seconds
+    
+
+#     # try:
+#     #     response = requests.get(paypal_api_url, headers=headers, timeout=30)
+#     #     response.raise_for_status()
+#     #     # Proceed with further processing of response
+#     # except requests.exceptions.Timeout:
+#     #     # Handle timeout
+#     #     print("Request timed out")
+#     # except requests.exceptions.RequestException as e:
+#     #     # Handle other exceptions
+#     #     print(f"Request failed: {e}")
+
+
+#     if response.status_code == 200:
+#         paypal_order_data = response.json()
+#         paypal_payment_status = paypal_order_data['status']
+#         payment_method = "Paypal"
+        
+#         if paypal_payment_status == "COMPLETED":
+#             if order.payment_status == "Processing":
+#                 order.payment_status = "Paid"
+#                 order.payment_method = payment_method
+                
+#                 order.save()
+#                 clear_cart_items(request)
+#                 return redirect(f"/payment_status/{order.order_id}/payment_status=Paid")
+#     else:
+#         return redirect(f"/payment_status/{order.order_id}/payment_status=Failed")
+                
+                
+def paypal_payment_verify(request, order_id):
+    order = store_models.Order.objects.get(order_id=order_id)
+    transaction_id = request.GET.get("transaction_id")
+    paypal_api_url = f"https://api-m.sandbox.paypal.com/v2/checkout/orders/{transaction_id}"
+
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": f"Bearer {get_paypal_access_token()}"  # Ensure this is a callable function
+    }
+
+    try:
+        response = requests.get(paypal_api_url, headers=headers, timeout=30)
+        response.raise_for_status()  # Raise an exception for HTTP errors
+    except requests.exceptions.RequestException as e:
+        print(f"Request failed: {e}")
+        return redirect(f"/payment_status/{order.order_id}/payment_status=Failed")
+
+    if response.status_code == 200:
+        paypal_order_data = response.json()
+        paypal_payment_status = paypal_order_data.get('status')
+
+        if paypal_payment_status == "COMPLETED":
+            if order.payment_status == "Processing":
+                order.payment_status = "Paid"
+                order.payment_method = "Paypal"
+                order.save()
+                clear_cart_items(request)
+                return redirect(f"/payment_status/{order.order_id}/?payment_status=Paid")
+
+    return redirect(f"/payment_status/{order.order_id}/payment_status=Failed")
+
+  
+def payment_status(request, order_id):
+    order = store_models.Order.objects.get(order_id=order_id)
+    payment_status = request.GET.get("payment_status")
+    context = {
+        "order":order,
+        "payment_status":payment_status,
+    }
+    return render(request, "store/payment_status.html", context)
+   
+   
+@csrf_exempt
+def stripe_payment(request, order_id):
+    order = store_models.Product.objects.get(order_id=order_id)
+    stripe.api_key = settings.STRIPE_SECRET_KEY
+    
+          
+# 
