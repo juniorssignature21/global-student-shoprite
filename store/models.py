@@ -189,8 +189,8 @@ class Order(models.Model):
     order_status = models.CharField(max_length=100, choices=ORDER_STATUS, default='Pending')
     initial_total = models.DecimalField(default=0.00, max_digits=12, decimal_places=2, help_text="The original total before")
     saved = models.DecimalField(max_digits=12, decimal_places=2, default=0.00, null=True, blank=True, help_text='Amount ')
-    # address  = models.ForeignKey("customer.Address", on_delete=models.SET_NULL, null=True)
-    coupons = models.ManyToManyField(Coupon, blank=True)
+    address  = models.ForeignKey("customer.Address", on_delete=models.SET_NULL, null=True, blank=True)
+    coupon = models.ManyToManyField(Coupon, blank=True)
     order_id = ShortUUIDField(length=6, max_length=25, alphabet='1234567890')
     payment_id = models.CharField(max_length=1000, null=True, blank=True)
     date = models.DateTimeField(default=timezone.now)
@@ -203,7 +203,7 @@ class Order(models.Model):
         return self.order_id
     
     def order_item(self):
-        return OrderItem.objects.filter(filter=self)
+        return OrderItem.objects.filter(order=self)
     
 
 class OrderItem(models.Model):

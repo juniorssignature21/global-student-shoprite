@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 asgiref==3.7.2
 attrs==23.1.0
 awsebcli==3.20.10
@@ -101,6 +102,8 @@ urllib3==1.26.17
 whitenoise==5.2.0
 django-extensions
 razorpay
+=======
+>>>>>>> 05c06c9a3e56a2d6fdd4d5bba215ffe84a9514c0
 asgiref==3.8.1
 certifi==2024.12.14
 charset-normalizer==3.4.1
@@ -115,15 +118,19 @@ django-jazzmin==3.0.1
 django-js-asset==3.0.1
 django-recaptcha==4.0.0
 environs==11.2.1
+gunicorn==23.0.0
 idna==3.10
 marshmallow==3.23.3
 packaging==24.2
 pillow==11.1.0
+psycopg2==2.9.10
 python-dotenv==1.0.1
 requests==2.32.3
 shortuuid==1.0.13
 sqlparse==0.5.3
+stripe==11.4.1
 tablib==3.7.0
+typing_extensions==4.12.2
 tzdata==2024.2
 urllib3==2.3.0
 whitenoise==6.8.2

@@ -1,0 +1,398 @@
+{% extends "partials/base.html" %}
+{% block content %}
+
+    <!-- Breadcrumb Start -->
+    <div class="container-fluid">
+        <div class="row px-xl-5">
+            <div class="col-12">
+                <nav class="breadcrumb bg-light mb-30">
+                    <a class="breadcrumb-item text-dark" href="#">Home</a>
+                    <a class="breadcrumb-item text-dark" href="#">Shop</a>
+                    <span class="breadcrumb-item active">Checkout</span>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <!-- Breadcrumb End -->
+
+
+    <!-- Checkout Start -->
+    <div class="container-fluid">
+        <div class="row px-xl-5">
+            <div class="col-lg-8">
+                <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Billing Address</span></h5>
+                <div class="bg-light p-30 mb-5">
+                    <div class="row">
+                        <div class="col-md-6 form-group">
+                            <label>First Name</label>
+                            <input class="form-control" type="text" placeholder="" value="{{order.address.first_name}}">
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>Last Name</label>
+                            <input class="form-control" type="text" placeholder="" value="{{order.address.last_name}}">
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>E-mail</label>
+                            <input class="form-control" type="text" placeholder="" value="{{order.address.email}}">
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>Mobile No</label>
+                            <input class="form-control" type="text" placeholder="" value="{{order.address.mobile}}">
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>Address Line 1</label>
+                            <input class="form-control" type="text" placeholder="" value="{{order.address.address}}">
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>Address Line 2</label>
+                            <input class="form-control" type="text" placeholder="" value="{{order.address.address2}}">
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>Country</label>
+                            <input class="form-control" type="text" placeholder="" value="{{order.address.country}}">
+                            {% comment %} <select class="custom-select">
+                                <option selected>United States</option>
+                                <option>Afghanistan</option>
+                                <option>Albania</option>
+                                <option>Algeria</option>
+                            </select> {% endcomment %}
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>City</label>
+                            <input class="form-control" type="text" placeholder="" value="{{order.address.city}}">
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>State</label>
+                            <input class="form-control" type="text" placeholder="" value="{{order.address.state}}">
+                        </div>
+                        <div class="col-md-6 form-group">
+                            {% comment %} <label>ZIP Code</label> {% endcomment %}
+                            <input class="form-control" type="hidden" placeholder="" value="{{order.address.zip_code}}">
+                        </div>
+                        <div class="col-md-12 form-group">
+                            <div class="custom-control custom-checkbox">
+                                <a href="{% url "store:cart" %}">
+                                    <button class="btn btn-primary">
+                                        Cart
+                                    </button>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="shipto">
+                                <label class="custom-control-label" for="shipto"  data-toggle="collapse" data-target="#shipping-address">Ship to different address</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="collapse mb-5" id="shipping-address">
+                    <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Shipping Address</span></h5>
+                    <div class="bg-light p-30">
+                        <div class="row">
+                            <div class="col-md-6 form-group">
+                                <label>First Name</label>
+                                <input class="form-control" type="text" placeholder="" value="{{order.address.full_name}}">
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label>Last Name</label>
+                                <input class="form-control" type="text" placeholder="Doe">
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label>E-mail</label>
+                                <input class="form-control" type="text" placeholder="example@email.com">
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label>Mobile No</label>
+                                <input class="form-control" type="text" placeholder="+123 456 789">
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label>Address Line 1</label>
+                                <input class="form-control" type="text" placeholder="123 Street">
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label>Address Line 2</label>
+                                <input class="form-control" type="text" placeholder="123 Street">
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label>Country</label>
+                                <select class="custom-select">
+                                    <option selected>United States</option>
+                                    <option>Afghanistan</option>
+                                    <option>Albania</option>
+                                    <option>Algeria</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label>City</label>
+                                <input class="form-control" type="text" placeholder="New York">
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label>State</label>
+                                <input class="form-control" type="text" placeholder="New York">
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label>ZIP Code</label>
+                                <input class="form-control" type="text" placeholder="123">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Order Total</span></h5>
+                <div class="bg-light p-30 mb-5">
+                    <div class="border-bottom">
+                        <h6 class="mb-3">Products</h6>
+                        {% for item in order.order_item.all %}
+                        <div class="d-flex align-items-center justify-content-around">
+                            <img
+                                src="{{item.product.image.url}}"
+                                class="img-fluid rounded-top"
+                                alt=""
+                                width="40px"
+                                height="40px"
+                            />
+                            
+                                <small>
+                                {{item.product.name}}
+
+                                </small>
+                            <small>
+                                ${{item.price}}
+                            </small>
+                            <small>
+                                <b>
+                                    Qty:
+                                </b>
+                                {{item.qty}}
+                            </small>
+                           <a href="{%url "store:cart"  %}">
+                            <i class="fas fa-edit"></i>
+                           </a>
+                        </div>
+                        {% endfor %}
+
+                    </div>
+                    <div class="border-bottom pt-3 pb-2">
+                        <div class="d-flex justify-content-between mb-3">
+                            <h6>Subtotal</h6>
+                            <h6>
+                                ${{order.sub_total}}
+                            </h6>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <h6 class="font-weight-medium">Shipping</h6>
+                            <h6 class="font-weight-medium">
+                                ${{order.shipping}}
+                            </h6>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <h6 class="font-weight-medium">service_fee</h6>
+                            <h6 class="font-weight-medium">
+                                ${{order.service_fee}}
+                            </h6>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <h6 class="font-weight-medium">tax</h6>
+                            <h6 class="font-weight-medium">
+                                ${{order.tax}}
+                            </h6>
+                        </div>
+                        {% if order.saved %}
+                        <div class="d-flex justify-content-between">
+                            <h6 class="font-weight-medium">Discount</h6>
+                            <h6 class="font-weight-medium">
+                                ${{order.saved}}
+                            </h6>
+                        </div>
+                        {% for coupon in order.coupons.all %}
+                        <small class="text-success fw-bold">
+                            {{coupon.code}} Applied
+                        </small>
+                        {% endfor %}
+                        {% endif %}
+
+                    </div>
+                    <div class="pt-2">
+                        <div class="d-flex justify-content-between mt-2">
+                            <h5>Total</h5>
+                            <h5>
+                                ${{order.total}}
+                            </h5>
+                        </div>
+                    </div>
+                </div>
+                {% comment %} <form action="{% url "store:coupon_apply" order.order_id  %}" method="POST">
+                    {% csrf_token %}
+                <div class="input-group mb-5">
+                        <input type="text" class="form-control border-0 p-4"
+                        id="code"
+                         name="coupon_code"  placeholder="Coupon Code">
+                        <div class="input-group-append">
+                            <button type="submit" class="btn btn-primary">Apply Coupon</button>
+                        </div>
+                    </div>
+                </form> {% endcomment %}
+
+                
+                <div class="mb-5">
+                    <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Payment</span></h5>
+                    <div class="bg-light p-30">
+                        <div id="paypal-button-container"></div>
+                        
+                        <div class="form-group">
+                            <button
+                                type="submit"
+                                class="btn btn-secondary w-100 h-80 rounded fw-bold"
+                                id="stripe-payment"
+                            >
+                                Stripe
+                            </button>
+                            
+                        </div>
+                        <div class="form-group" style="background-color: lightblue; border-radius: 5px; ">
+                            <button
+                                type="button"
+                                class="btn  w-100 h-80 rounded text-light  fw-bold"
+                                id="paystack-payment"
+                                onclick="payWithPaystack()"
+                            >
+                                Paystack
+                            </button>
+                            
+                        </div>
+                        <div class="form-group">
+                            <div class="custom-control custom-radio">
+                                <input type="radio" class="custom-control-input" name="payment" id="directcheck">
+                                <label class="custom-control-label" for="directcheck">Direct Check</label>
+                            </div>
+                        </div>
+                        <div class="form-group mb-4">
+                            <div class="custom-control custom-radio">
+                                <input type="radio" class="custom-control-input" name="payment" id="banktransfer">
+                                <label class="custom-control-label" for="banktransfer">Bank Transfer</label>
+                            </div>
+                        </div>
+                        <button class="btn btn-block btn-primary font-weight-bold py-3">Place Order</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Checkout End -->
+<script src="https://www.paypal.com/sdk/js?client-id={{paypal_client_id}}&currency=USD"></script>
+<script src="https://js.stripe.com/v3/"></script>
+<script src="https://js.paystack.co/v1/inline.js"></script>
+
+<script>
+    function initPayPalButton() {
+        paypal.Buttons({
+            style: {
+                shape: "rect",
+                color: "gold",
+                layout: "vertical",
+                label: "paypal",
+            },
+            createOrder: function (data, actions) {
+                return actions.order.create({
+                    purchase_units: [{
+                        amount: {
+                            currency_code: "USD",
+                            value: "{{order.total}}", // Replace with dynamic order total
+                        },
+                    }],
+                });
+            },
+            onApprove: function (data, actions) {
+                return actions.order.capture().then(function(orderData) {
+                    // Show a success message within this page
+                    const element = document.getElementById("paypal-button-container");
+                    element.innerHTML = "<h5>Verifying payment...</h5>";
+                    window.location.href = `/paypal_payment_verify/{{order.order_id}}/?transaction_id=${orderData.id}`;
+                });
+            },
+            onError: function (err) {
+                console.log(err);
+            }
+        }).render("#paypal-button-container");
+    }
+    document.addEventListener("DOMContentLoaded", function () {
+        initPayPalButton();
+    });
+</script>
+
+<script>
+    var stripe = Stripe("{{stripe_public_key}}");
+    var checkoutButton = document.getElementById("stripe-payment");
+
+    try {
+        checkoutButton.addEventListener("click", function () {
+            var email = "{{order.address.email}}";
+            checkoutButton.innerHTML = "Processing <i class='fas fa-spinner fa-spin'></i>";
+
+            fetch("/stripe_payment/{{order.order_id}}/", {
+                //Replace with your actual order id
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    //'X-CSRFToken': getCookie('csrftoken') // Include CSRF token if necessary
+                },
+                body: JSON.stringify({email: email}),
+            })
+                .then(response => {
+                    // Ensure the response is OK and parse it as JSON
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok ' + response.statusText);
+                    }
+                    return response.json();
+                })
+                .then(function (session) {
+                    if (session && session.sessionId) {
+                        return stripe.redirectToCheckout({ sessionId: session.sessionId });
+                    } else {
+                        console.error('Session ID not found in the response.');
+                    }
+                })
+                .then(function (result) {
+                    if (result.error) {
+                        alert(result.error.message);
+                    }
+                })
+                .catch(function (error) {
+                    console.log("Error: ", error);
+                });
+            });
+        } catch (error) {
+            console.log(error);
+        }
+    
+
+</script>
+
+<script type="text/javascript">
+    function payWithPaystack() {
+        // Initialize Paystack payment
+        var handler = PaystackPop.setup({
+            key: "{{paystack_public_key}}", // Replace with your public key
+            email: "{{order.address.email}}", // Customer email
+            amount:"{{amount_in_kobo}}", // Amount in kobo (multiply by 100)
+            currency: "NGN", // Currency
+            ref:"" + Math.floor(Math.random() * 1000000000 + 1), // Unique transaction reference from your API
+            callback: function(response) {
+                // Handle successful payment
+                window.location.href = ('/paystack_payment_verify/{{order.order_id}}/?reference=' + response.reference + "&payment_methon=Paystack");
+                // Optionally, verify payment by sending response.reference to your server
+            },
+            onClose: function() {
+                alert('Transaction was not completed, window closed.');
+            },
+        });
+        handler.openIframe(); // Open the payment modal
+    }
+
+
+</script>
+
+
+{% endblock content %}

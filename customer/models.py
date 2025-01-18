@@ -26,20 +26,23 @@ class Wishlist(models.Model):
         
 class Address(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-    full_name = models.CharField(max_length=200, null=True, blank=True, default=None)
+    first_name = models.CharField(max_length=200, null=True, blank=True, default=None)
+    last_name = models.CharField(max_length=200, null=True, blank=True, default=None)
     mobile = models.CharField(max_length=50, null=True, blank=True, default=None)
     email = models.CharField(max_length=100, null=True, blank=True, default=None)
     country = models.CharField(max_length=100, null=True, blank=True, default=None)
     state = models.CharField(max_length=100, null=True, blank=True, default=None)
     city = models.CharField(max_length=100, null=True, blank=True, default=None)
     address = models.CharField(max_length=100, null=True, blank=True, default=None)
+    address2 = models.CharField(max_length=100, null=True, blank=True, default=None)
     zip_code = models.CharField(max_length=100, null=True, blank=True, default=None)
     
     class Meta:
         verbose_name_plural = "Customer Address"
         
     def __str__(self):
-        return self.full_name
+        
+        return f"{self.first_name} {self.last_name}"
     
 class Notification(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)

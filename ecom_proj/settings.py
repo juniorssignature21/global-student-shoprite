@@ -16,6 +16,7 @@ from environs import Env
 import os
 from django.contrib import messages
 
+
 env = Env()  
 env.read_env()  
 
@@ -81,7 +82,7 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
-                # 'store.context.default',
+                'store.context.default',
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
@@ -152,31 +153,31 @@ AUTH_USER_MODEL = 'userauths.User'
 
 
 # Stripe API Keys 
-STRIPE_PUBLIC_KEY = env("STRIPE_PUBLIC_KEY")
-STRIPE_SECRET_KEY = env("STRIPE_SECRET_KEY")
+STRIPE_PUBLIC_KEY = os.getenv("STRIPE_PUBLIC_KEY")
+STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY")
 
 # Paypal API Keys 
-PAYPAL_CLIENT_ID = env('PAYPAL_CLIENT_ID')
-PAYPAL_SECRET_ID = env('PAYPAL_SECRET_ID')
+PAYPAL_CLIENT_ID = os.getenv('PAYPAL_CLIENT_ID')
+PAYPAL_SECRET_ID = os.getenv('PAYPAL_SECRET_ID')
 
 # Flutterwave Keys
-FLUTTERWAVE_PUBLIC_KEY=env("FLUTTERWAVE_PUBLIC_KEY")
-FLUTTERWAVE_PRIVATE_KEY=env("FLUTTERWAVE_PRIVATE_KEY")
+#FLUTTERWAVE_PUBLIC_KEY=env("FLUTTERWAVE_PUBLIC_KEY")
+#FLUTTERWAVE_PRIVATE_KEY=env("FLUTTERWAVE_PRIVATE_KEY")
 
 # Paystack Keys
-PAYSTACK_PUBLIC_KEY=env("PAYSTACK_PUBLIC_KEY")
-PAYSTACK_PRIVATE_KEY=env("PAYSTACK_PRIVATE_KEY")
+PAYSTACK_PUBLIC_KEY=os.getenv("PAYSTACK_PUBLIC_KEY")
+PAYSTACK_PRIVATE_KEY=os.getenv("PAYSTACK_PRIVATE_KEY")
 
 # Razorpay keys
-RAZORPAY_KEY_ID=env("RAZORPAY_KEY_ID")
-RAZORPAY_KEY_SECRET=env("RAZORPAY_KEY_SECRET")
+#RAZORPAY_KEY_ID=env("RAZORPAY_KEY_ID")
+#RAZORPAY_KEY_SECRET=env("RAZORPAY_KEY_SECRET")
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-FROM_EMAIL=env("FROM_EMAIL")
-EMAIL_BACKEND=env("EMAIL_BACKEND")
-DEFAULT_FROM_EMAIL=env("DEFAULT_FROM_EMAIL")
-SERVER_EMAIL=env("SERVER_EMAIL")
+#FROM_EMAIL=env("FROM_EMAIL")
+#EMAIL_BACKEND=env("EMAIL_BACKEND")
+#DEFAULT_FROM_EMAIL=env("DEFAULT_FROM_EMAIL")
+#SERVER_EMAIL=env("SERVER_EMAIL")
 
 ANYMAIL = {
     "MAILGUN_API_KEY": os.environ.get("MAILGUN_API_KEY"),
@@ -196,8 +197,8 @@ LOGIN_URL = "userauths:sign-in"
 LOGIN_REDIRECT_URL = ""
 LOGOUT_REDIRECT_URL = "userauths:sign-in"
 
-RECAPTCHA_PUBLIC_KEY = env("DJANGO_RECAPTCHA_PUBLIC_KEY")
-RECAPTCHA_PRIVATE_KEY = env("DJANGO_RECAPTCHA_PRIVATE_KEY")
+#RECAPTCHA_PUBLIC_KEY = env("DJANGO_RECAPTCHA_PUBLIC_KEY")
+#RECAPTCHA_PRIVATE_KEY = env("DJANGO_RECAPTCHA_PRIVATE_KEY")
 
 # Custom Admin Settings
 JAZZMIN_SETTINGS = {
