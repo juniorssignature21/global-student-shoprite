@@ -1,9 +1,9 @@
 {
   "name": "ecom_proj",
   "version": "1.0.0",
-  "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon index.js"
+ "scripts": {
+    "build": "webpack --mode production",
+    "start": "npm run build"
   },
   "dependencies": {
     "express": "^4.17.1",
