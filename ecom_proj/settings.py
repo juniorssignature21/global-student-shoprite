@@ -38,7 +38,7 @@ DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
 # ALLOWED_HOSTS = ['*']
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '127.0.0.1').split(',')
-# CSRF_TRUSTED_ORIGINS = ['http://127.0.0.1', 'https://*.ngrok-free.app', 'https://fastcart.up.railway.app']
+CSRF_TRUSTED_ORIGINS = ['http://127.0.0.1', 'https://ahia-oma.up.railway.app/']
 SECURE_CROSS_ORIGIN_OPENER_POLICY = 'same-origin-allow-popups'
 
 # Application definition

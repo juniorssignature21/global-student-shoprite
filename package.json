@@ -1,16 +1,5 @@
 {
-  "name": "ecom_proj",
-  "version": "1.0.0",
-  "scripts": {
-    "build": "webpack --mode production",
-    "start": "npm run build"
-  },
   "dependencies": {
-    "express": "^4.17.1",
     "sweetalert2": "^11.15.10"
-  },
-  "devDependencies": {
-    "webpack": "^5.x",
-    "webpack-cli": "^4.x"
   }
 }
