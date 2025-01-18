@@ -285,42 +285,7 @@
 <script src="https://js.stripe.com/v3/"></script>
 <script src="https://js.paystack.co/v1/inline.js"></script>
 
-<script>
-    function initPayPalButton() {
-        paypal.Buttons({
-            style: {
-                shape: "rect",
-                color: "gold",
-                layout: "vertical",
-                label: "paypal",
-            },
-            createOrder: function (data, actions) {
-                return actions.order.create({
-                    purchase_units: [{
-                        amount: {
-                            currency_code: "USD",
-                            value: "{{order.total}}", // Replace with dynamic order total
-                        },
-                    }],
-                });
-            },
-            onApprove: function (data, actions) {
-                return actions.order.capture().then(function(orderData) {
-                    // Show a success message within this page
-                    const element = document.getElementById("paypal-button-container");
-                    element.innerHTML = "<h5>Verifying payment...</h5>";
-                    window.location.href = `/paypal_payment_verify/{{order.order_id}}/?transaction_id=${orderData.id}`;
-                });
-            },
-            onError: function (err) {
-                console.log(err);
-            }
-        }).render("#paypal-button-container");
-    }
-    document.addEventListener("DOMContentLoaded", function () {
-        initPayPalButton();
-    });
-</script>
+
 
 <script>
     var stripe = Stripe("{{stripe_public_key}}");
@@ -371,25 +336,7 @@
 </script>
 
 <script type="text/javascript">
-    function payWithPaystack() {
-        // Initialize Paystack payment
-        var handler = PaystackPop.setup({
-            key: "{{paystack_public_key}}", // Replace with your public key
-            email: "{{order.address.email}}", // Customer email
-            amount:"{{amount_in_kobo}}", // Amount in kobo (multiply by 100)
-            currency: "NGN", // Currency
-            ref:"" + Math.floor(Math.random() * 1000000000 + 1), // Unique transaction reference from your API
-            callback: function(response) {
-                // Handle successful payment
-                window.location.href = ('/paystack_payment_verify/{{order.order_id}}/?reference=' + response.reference + "&payment_methon=Paystack");
-                // Optionally, verify payment by sending response.reference to your server
-            },
-            onClose: function() {
-                alert('Transaction was not completed, window closed.');
-            },
-        });
-        handler.openIframe(); // Open the payment modal
-    }
+    
 
 
 </script>

@@ -143,77 +143,6 @@ $(document).ready(function() {
     
     
     
-    // $(document).on('click', '.update_cart_qty', function(){
-    //     const button_el = $(this);
-    //     const data_quantity = button_el.attr('data-qty');
-    //     const update_type = button_el.attr('data-update-type');
-    //     const item_id = button_el.attr('data-item-id');
-    //     var qty = $(".item-qty-" + item_id).val();
-    //     const product_id = button_el.attr('data-product-id');
-    //     const cart_id = generateCartId();
-
-    //     if (update_type === "increase"){
-    //         $(".item-qty-" + item_id).val(parseInt(qty) + 1);
-    //         qty++;
-    //     } else {
-    //         if (parseInt(qty) <= 1){
-    //             $(".item-qty-" + item_id).val(1);
-    //             qty = 1;
-    //         }else {
-    //             $(".item-qty-" + item_id).val(parseInt(qty) - 1);
-    //             qty--;
-    //         }
-            
-    //     }
-
-    //     $.ajax({
-    //         url: "/add_to_cart/",
-    //         data: {
-    //             id: product_id,
-    //             qty: qty,
-    //             cart_id: cart_id,
-    //         },
-    //         beforeSend: function () {
-    //             button_el.html("<i class='fas fa-spinner fa-spin ms-2'></i>");
-
-    //         },
-    //         success: function(response){
-    //             console.log(response)
-    //             Toast.fire({
-    //                 icon: "success",
-    //                 title: response?.message,
-    //             });
-    //             if (update_type === "increase") {
-    //                 button_el.html("+");
-    //             } else {
-    //                 button_el.html("-");
-    //             }
-    //             $(".item_sub_total_" + item_id).text(response.item_sub_total);
-    //             $(".cart_sub_total").text(response.cart_sub_total);
-
-    //         },
-    //         error: function(xhr, status, error){
-    //             console.log("Error Status: ", xhr.status);
-    //             console.log("Response Text: ", xhr.responseText);
-    //             let errorResponse = JSON.parse(xhr.responseText);
-
-    //             Toast.fire({
-    //                 icon: "error",    
-    //                 title: errorResponse?.error,
-    //             });
-                
-
-
-    //             if (update_type === "increase") {
-                
-    //                 button_el.html("+");
-    //             } else {
-    //                 button_el.html("-");
-    //             }
-    //         }
-    //     });
-    // });
-
 
     //delete item from cart
     $(document).on('click', '.delete_cart_item', function(){
@@ -246,4 +175,9 @@ $(document).ready(function() {
         });
     });
 });
+
+
+
+
+
   
