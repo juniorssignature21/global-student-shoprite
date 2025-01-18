@@ -37,7 +37,7 @@
                             <tr class="item_div_{{item.id}}">
                                 <td class="align-middle"><img src="{{item.product.image.url}}" alt="" style="width: 50px;"> {{item.product.name}}  </td>
                                 <td class="align-middle">
-                                    &#8358;{{item.price}}
+                                $ {{item.price}}
                                 </td>
                                 <td class="align-middle">
                                     <div class="input-group quantity mx-auto" style="width: 100px;">
@@ -67,7 +67,7 @@
                                         </div>
                                     </div>                            </td>
                                 <td class="align-middle"><span class="item_sub_total_{{item.id}}">
-                                    &#8358;{{item.sub_total}}
+                         ${{item.sub_total}}
                                 </span></td>
                                 <td class="align-middle">
                                     <button class="btn btn-sm btn-danger  delete_cart_item" data-item-id="{{item.id}}" data-product-id="{{item.product.id}}"><i class="fa fa-times"></i></button>
@@ -159,18 +159,18 @@
                     <div class="border-bottom pb-2">
                         <div class="d-flex justify-content-between mb-3">
                             <h6>Subtotal</h6>
-                            <h6>&#8358;{{cart_sub_total|intcomma}}</h6>
+                            <h6>${{cart_sub_total|intcomma}}</h6>
                         </div>
                         <div class="d-flex justify-content-between">
                             <h6 class="font-weight-medium">Shipping</h6>
-                            <h6 class="font-weight-medium">&#8358;0.00</h6>
+                            <h6 class="font-weight-medium">$0.00</h6>
                         </div>
                     </div>
                     <div class="pt-2">
                         <div class="d-flex justify-content-between mt-2">
                             <h5>Total</h5>
                             <h5><span class="cart_sub_total">
-                                &#8358; {{cart_sub_total|intcomma}}
+                                ${{cart_sub_total|intcomma}}
                             </span></h5>
                         </div>
                         <button type="submit" class="btn btn-block btn-primary font-weight-bold my-3 py-3">Proceed To Checkout</button>

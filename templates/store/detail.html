@@ -79,8 +79,8 @@
                         <small class="pt-1">({{products.reviews.all.count|default:"0"}} Reviews)</small>
                     </div>
                         <div class="d-flex justify-content-evenly align-center">
-                            <span class="font-weight-semi-bold mb-4 px-5"><h3>&#8358;{{products.regular_price}}</h3></span>
-                            {% if products.stock > 0 %}
+                            <span class="font-weight-semi-bold mb-4 px-5"><h3>${{products.regular_price}}</h3></span>
+                            {% if products.stock t> 0 %}
                         <div class="d-grid gap-2">
                             <button
                                 class="btn btn-primary"
@@ -342,7 +342,7 @@
                     <div class="text-center py-4">
                         <a class="h6 text-decoration-none text-truncate" href="{% url "store:product-detail" prod.slug %}">{{prod.name}}</a>
                         <div class="d-flex align-items-center justify-content-center mt-2">
-                            <h5>&#8358;{{prod.price}}</h5><h6 class="text-muted ml-2"><del>&#8358;{{prod.price}}</del></h6>
+                            <h5>${{prod.price}}</h5><h6 class="text-muted ml-2"><del>${{prod.price}}</del></h6>
                         </div>
                         <div class="d-flex align-items-center justify-content-center mb-1">
                             {% if not prod.average_rating %}
