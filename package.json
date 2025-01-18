@@ -2,6 +2,7 @@
   "name": "ecom_proj",
   "version": "1.0.0",
   "scripts": {
+    "migrate": "python manage.py migrate",
     "build": "webpack --mode production",
     "start": "npm run build"
   },
