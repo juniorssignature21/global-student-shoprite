@@ -42,21 +42,23 @@
                                 <td class="align-middle">
                                     <div class="input-group quantity mx-auto" style="width: 100px;">
                                         <div class="input-group-btn">
-                                            <button class="btn btn-sm btn-primary  update_cart_qty" data-update-type="decrease"
+                                            <button 
+                                            type="button"
+                                            class="btn btn-sm btn-primary  update_cart_qty" data-update-type="decrease"
                                             data-item-id="{{item.id}}"
                                             data-product-id="{{item.product.id}}"
                                             >
                                             <i class="fa fa-minus"></i>
                                             </button>
                                         </div>
-                                        <input type="hidden" value="{{item.product.stock}}">
                                         <input type="text" class="form-control form-control-sm bg-secondary border-0 text-center item-qty-{{item.id}}"
-    
                                          value="{{item.qty}}"
                                         data-qty="{{item.product.stock}}"
                                          >
                                         <div class="input-group-btn">
-                                            <button class="btn btn-sm btn-primary btn-plus update_cart_qty" data-update-type="increase" 
+                                            <button 
+                                            type="button"
+                                            class="btn btn-sm btn-primary btn-plus update_cart_qty" data-update-type="increase" 
                                              data-item-id="{{item.id}}"
                                             data-product-id="{{item.product.id}}"
                                              >

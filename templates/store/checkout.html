@@ -242,10 +242,25 @@
                         <div id="paypal-button-container"></div>
                         
                         <div class="form-group">
-                            <div class="custom-control custom-radio">
-                                <input type="radio" class="custom-control-input" name="payment" id="paypal-button-container">
-                                <label class="custom-control-label" for="paypal-button-container">Paypal</label>
-                            </div>
+                            <button
+                                type="submit"
+                                class="btn btn-secondary w-100 h-80 rounded fw-bold"
+                                id="stripe-payment"
+                            >
+                                Stripe
+                            </button>
+                            
+                        </div>
+                        <div class="form-group" style="background-color: lightblue; border-radius: 5px; ">
+                            <button
+                                type="button"
+                                class="btn  w-100 h-80 rounded text-light  fw-bold"
+                                id="paystack-payment"
+                                onclick="payWithPaystack()"
+                            >
+                                Paystack
+                            </button>
+                            
                         </div>
                         <div class="form-group">
                             <div class="custom-control custom-radio">
@@ -267,6 +282,8 @@
     </div>
     <!-- Checkout End -->
 <script src="https://www.paypal.com/sdk/js?client-id={{paypal_client_id}}&currency=USD"></script>
+<script src="https://js.stripe.com/v3/"></script>
+<script src="https://js.paystack.co/v1/inline.js"></script>
 
 <script>
     function initPayPalButton() {
@@ -304,5 +321,78 @@
         initPayPalButton();
     });
 </script>
+
+<script>
+    var stripe = Stripe("{{stripe_public_key}}");
+    var checkoutButton = document.getElementById("stripe-payment");
+
+    try {
+        checkoutButton.addEventListener("click", function () {
+            var email = "{{order.address.email}}";
+            checkoutButton.innerHTML = "Processing <i class='fas fa-spinner fa-spin'></i>";
+
+            fetch("/stripe_payment/{{order.order_id}}/", {
+                //Replace with your actual order id
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    //'X-CSRFToken': getCookie('csrftoken') // Include CSRF token if necessary
+                },
+                body: JSON.stringify({email: email}),
+            })
+                .then(response => {
+                    // Ensure the response is OK and parse it as JSON
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok ' + response.statusText);
+                    }
+                    return response.json();
+                })
+                .then(function (session) {
+                    if (session && session.sessionId) {
+                        return stripe.redirectToCheckout({ sessionId: session.sessionId });
+                    } else {
+                        console.error('Session ID not found in the response.');
+                    }
+                })
+                .then(function (result) {
+                    if (result.error) {
+                        alert(result.error.message);
+                    }
+                })
+                .catch(function (error) {
+                    console.log("Error: ", error);
+                });
+            });
+        } catch (error) {
+            console.log(error);
+        }
+    
+
+</script>
+
+<script type="text/javascript">
+    function payWithPaystack() {
+        // Initialize Paystack payment
+        var handler = PaystackPop.setup({
+            key: "{{paystack_public_key}}", // Replace with your public key
+            email: "{{order.address.email}}", // Customer email
+            amount:"{{amount_in_kobo}}", // Amount in kobo (multiply by 100)
+            currency: "NGN", // Currency
+            ref:"" + Math.floor(Math.random() * 1000000000 + 1), // Unique transaction reference from your API
+            callback: function(response) {
+                // Handle successful payment
+                window.location.href = ('/paystack_payment_verify/{{order.order_id}}/?reference=' + response.reference + "&payment_methon=Paystack");
+                // Optionally, verify payment by sending response.reference to your server
+            },
+            onClose: function() {
+                alert('Transaction was not completed, window closed.');
+            },
+        });
+        handler.openIframe(); // Open the payment modal
+    }
+
+
+</script>
+
 
 {% endblock content %}

@@ -1,6 +1,8 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
+from django.urls import reverse
 from plugin.service_fee import calculate_service_fee
+from plugin.exchange_rate import convert_usd_inr, convert_usd_kobo, convert_usd_ngn
 from store import models as store_models
 from customer import models as customer_models
 from django.contrib import messages
@@ -13,14 +15,19 @@ from django.views.decorators.csrf import csrf_exempt
 
 import requests
 import stripe
+stripe.api_key = settings.STRIPE_SECRET_KEY
+
 # Create your views here.
 
 def index(request):
     
     products = store_models.Product.objects.filter(status="Published")
+    categories = store_models.Category.objects.all()[:6]
+    
     
     context = {
         "products":products,
+        "categories":categories,
     }
     return render(request, "store/index.html", context)
 
@@ -208,9 +215,19 @@ def create_order(request):
 
 def checkout(request, order_id):
     order = store_models.Order.objects.get(order_id=order_id)
+    
+    amount_in_inr  = convert_usd_inr(order.total)
+    amount_in_kobo  = convert_usd_kobo(order.total)
+    amount_in_ngn  = convert_usd_ngn(order.total)
+    
     context = {
         "order":order,
-        "paypal_client_id": settings.PAYPAL_CLIENT_ID
+        "paypal_client_id": settings.PAYPAL_CLIENT_ID,
+        "stripe_public_key": settings.STRIPE_PUBLIC_KEY,
+        "paystack_public_key": settings.PAYSTACK_PUBLIC_KEY,
+        "amount_in_inr":amount_in_inr,
+        "amount_in_kobo":amount_in_kobo,
+        "amount_in_ngn":amount_in_ngn,
     }
     return render(request, "store/checkout.html", context)
         
@@ -371,10 +388,123 @@ def payment_status(request, order_id):
     return render(request, "store/payment_status.html", context)
    
    
+# @csrf_exempt
+# def stripe_payment(request, order_id):
+#     order = store_models.Order.objects.get(order_id=order_id)
+#     stripe.api_key = settings.STRIPE_SECRET_KEY
+#     checkout_session =  stripe.checkout.Session.create(
+#         customer_email = order.address.email,
+#         payment_method_types= ['card'],
+#         line_items=[
+#             {
+#                 "price_data" : {
+#                     'currency': 'USD',
+#                     "product_data": {
+#                         "name": f"{order.address.first_name} {order.address.last_name}"
+#                     },
+#                     "unit_amount": int(order.total * 100)
+#                 },
+#                 "quantity": 1
+#             }
+#         ],
+#         mode = "payment",
+#         success_url = request.build_absolute_uri(reverse("store:stripe_payment_verify", args=[order.order_id])) + "?session_id={CHECKOUT_SESSION_ID}" + "&payment_method=Stripe",
+        
+#         cancel_url = request.build_absolute_uri(reverse("store:stripe_payment_verify", args=[order.order_id])),
+#     )
+#     print("checkout session:", checkout_session)
+#     return JsonResponse({"sessionId": checkout_session.id})
+
 @csrf_exempt
 def stripe_payment(request, order_id):
-    order = store_models.Product.objects.get(order_id=order_id)
-    stripe.api_key = settings.STRIPE_SECRET_KEY
+    try:
+        # Fetch the order or return a 404 if not found
+        order = get_object_or_404(store_models.Order, order_id=order_id)
+        
+        
+        # Create a checkout session
+        checkout_session = stripe.checkout.Session.create(
+            customer_email=order.address.email,
+            payment_method_types=['card'],
+            line_items=[
+                {
+                    "price_data": {
+                        'currency': 'USD',
+                        "product_data": {
+                            "name": order.address.first_name
+                        },
+                        "unit_amount": int(order.total * 100)
+                    },
+                    "quantity": 1
+                }
+            ],
+            mode="payment",
+            success_url=request.build_absolute_uri(
+                reverse("store:stripe_payment_verify", args=[order.order_id])
+            ) + "?session_id={CHECKOUT_SESSION_ID}&payment_method=Stripe",
+            cancel_url=request.build_absolute_uri(
+                reverse("store:stripe_payment_verify", args=[order.order_id])
+            ),
+        )
+        
+        # Return the session ID as a JSON response
+        return JsonResponse({"sessionId": checkout_session.id})
+
+    except stripe.error.StripeError as e:
+        # Handle Stripe errors
+        return JsonResponse({"error": str(e)}, status=400)
+    except Exception as e:
+        # Handle other potential errors
+        return JsonResponse({"error": "An error occurred. Please try again."}, status=500)
+
+def stripe_payment_verify(request, order_id):
+    order = get_object_or_404(store_models.Order, order_id=order_id)
+
     
+    session_id = request.GET.get("session_id")
+    session = stripe.checkout.Session.retrieve(session_id)
+    
+    if session.payment_status == "paid":
+        if order.payment_status == "Processing":
+            order.payment_status = "Paid"
+            order.save()
+            clear_cart_items(request)
+            
+            #send email to customer
+            
+            #send email to vendor
+            
+            #send inApp notification
+            
+            return redirect(f"/payment_status/{order.order_id}/?payment_status=Paid")
+    return redirect(f"/payment_status/{order.order_id}/?payment_status=Failed")
+
           
-# 
+def paystack_payment_verify(request, order_id):
+    order = get_object_or_404(store_models.Order, order_id=order_id)
+    reference = request.GET.get("reference", "")
+    
+    if reference:
+        headers = {
+            "Authorization": f"Bearer {settings.PAYSTACK_PRIVATE_KEY}",
+            "Content-Type": "application/json"
+        }
+        
+        response = requests.get(f"https://api.paystack.co/transaction/verify/{reference}", headers=headers)
+        response_data = response.json()
+        
+        if response_data["status"]:
+            if response_data["data"]["status"]  == "success":
+                if order.payment_status == "Processing":
+                    order.payment_status = "Paid"
+                    order.save()
+                    clear_cart_items(request)
+                    
+                    #send email to customer
+                    
+                    #send email to vendor
+                    
+                    #send inApp notification
+                    return redirect(f"/payment_status/{order.order_id}/?payment_status=Paid")
+                
+        return redirect(f"/payment_status/{order.order_id}/?payment_status=Failed")
