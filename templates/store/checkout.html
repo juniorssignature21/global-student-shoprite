@@ -159,7 +159,7 @@
 
                                 </small>
                             <small>
-                                &#8358;{{item.price}}
+                                ${{item.price}}
                             </small>
                             <small>
                                 <b>
@@ -178,32 +178,32 @@
                         <div class="d-flex justify-content-between mb-3">
                             <h6>Subtotal</h6>
                             <h6>
-                                &#8358;{{order.sub_total}}
+                                ${{order.sub_total}}
                             </h6>
                         </div>
                         <div class="d-flex justify-content-between">
                             <h6 class="font-weight-medium">Shipping</h6>
                             <h6 class="font-weight-medium">
-                                &#8358;{{order.shipping}}
+                                ${{order.shipping}}
                             </h6>
                         </div>
                         <div class="d-flex justify-content-between">
                             <h6 class="font-weight-medium">service_fee</h6>
                             <h6 class="font-weight-medium">
-                                &#8358;{{order.service_fee}}
+                                ${{order.service_fee}}
                             </h6>
                         </div>
                         <div class="d-flex justify-content-between">
                             <h6 class="font-weight-medium">tax</h6>
                             <h6 class="font-weight-medium">
-                                &#8358;{{order.tax}}
+                                ${{order.tax}}
                             </h6>
                         </div>
                         {% if order.saved %}
                         <div class="d-flex justify-content-between">
                             <h6 class="font-weight-medium">Discount</h6>
                             <h6 class="font-weight-medium">
-                                &#8358;{{order.saved}}
+                                ${{order.saved}}
                             </h6>
                         </div>
                         {% for coupon in order.coupons.all %}
@@ -218,7 +218,7 @@
                         <div class="d-flex justify-content-between mt-2">
                             <h5>Total</h5>
                             <h5>
-                                &#8358;{{order.total}}
+                                ${{order.total}}
                             </h5>
                         </div>
                     </div>
