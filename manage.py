@@ -17,7 +17,7 @@ def main():
         ) from exc
         port = os.getenv("PORT", "8000")
     # execute_from_command_line(sys.argv)
-    execute_from_command_line([sys.argv[0], 'runserver', f'0.0.0.0:{port}'])
+        execute_from_command_line([sys.argv[0], 'runserver', f'0.0.0.0:{port}'])
 
 
 if __name__ == '__main__':
